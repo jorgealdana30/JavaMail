@@ -20,7 +20,7 @@ public class Envio extends javax.swing.JFrame {
     /**
      * Creates new form Envio
      */
-    private String user, pass, url;
+    private String user, pass, url, nombrearchivo;
 
     public Envio() {
         initComponents();
@@ -123,6 +123,7 @@ public class Envio extends javax.swing.JFrame {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = adjunto.getSelectedFile();
             url = file.getAbsolutePath();
+            nombrearchivo = file.getName();
         } else {
             System.out.println("Acceso al archivo cancelado por el usuario.");
         }
@@ -138,7 +139,7 @@ public class Envio extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
             }
         }else{
-            if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url)) {
+            if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url, nombrearchivo)) {
                 JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);

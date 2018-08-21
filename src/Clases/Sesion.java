@@ -47,7 +47,7 @@ public class Sesion {
         return enviado;
     }
 
-    public boolean enviarConAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto, String adjunto) {
+    public boolean enviarConAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto, String adjunto, String nombreArchivo) {
         boolean enviado = false;
         try {
             Properties p = new Properties();
@@ -66,6 +66,7 @@ public class Sesion {
             text.setText(texto);
             BodyPart adjuntar = new MimeBodyPart();
             adjuntar.setDataHandler(new DataHandler(new FileDataSource(adjunto)));
+            adjuntar.setFileName(nombreArchivo);
             MimeMultipart multiParte = new MimeMultipart();
             multiParte.addBodyPart(text);
             multiParte.addBodyPart(adjuntar);
