@@ -5,6 +5,10 @@
  */
 package Interfaz;
 
+import Clases.Sesion;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.NoSuchProviderException;
 import javax.swing.JOptionPane;
 
 /**
@@ -91,37 +95,73 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String contra = "";
+
         for (int i = 0; i < pass.getPassword().length; i++) {
             contra += pass.getPassword()[i];
         }
+        Sesion s;
         switch (servers.getSelectedIndex()) {
             case 1: {
-                Envio e = new Envio(email.getText().trim(), contra, "smtp.gmail.com", "587");
-                e.setVisible(true);
-                this.setVisible(false);
+                try {
+                    s = new Sesion("smtp.gmail.com", "587", email.getText().trim(), contra);
+                    if (s.validarInfo()) {
+                        Envio e = new Envio(email.getText().trim(), contra, "smtp.gmail.com", "587");
+                        System.out.println("chupala pero al reves");
+                        e.setVisible(true);
+                        this.setVisible(false);
+                    } else {
+                        s = null;
+                        JOptionPane.showMessageDialog(this, "Error: email o contraseña incorrecta", "Error", 0);
+                    }
+                } catch (NoSuchProviderException ex) {
+                    //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             }
-            case 2:{
-                Envio e = new Envio(email.getText().trim(), contra, "smtp-mail.outlook.com", "587");
-                e.setVisible(true);
-                this.setVisible(false);
+            case 2: {
+                try {
+                    s = new Sesion("smtp-mail.outlook.com", "587", email.getText().trim(), contra);
+                    if (s.validarInfo()) {
+                        Envio e = new Envio(email.getText().trim(), contra, "smtp-mail.outlook.com", "587");
+                        System.out.println("chupala");
+                        e.setVisible(true);
+                        this.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: email o contraseña incorrecta", "Error", 0);
+                        s = null;
+                    }
+                } catch (NoSuchProviderException ex) {
+                    //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             }
-            case 3:{
-                Envio e = new Envio(email.getText().trim(), contra, "smtp.office365.com", "587");
-                e.setVisible(true);
-                this.setVisible(false);
+            case 3: {
+                try {
+                    s = new Sesion("smtp.office365.com", "587", email.getText().trim(), contra);
+                    if (s.validarInfo()) {
+                        Envio e = new Envio(email.getText().trim(), contra, "smtp.office365.com", "587");
+                        System.out.println("chupala otra vez");
+                        e.setVisible(true);
+                        this.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error: email o contraseña incorrecta", "Error", 0);
+                        s = null;
+                    }
+                } catch (NoSuchProviderException ex) {
+                    //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
             }
-            default:{
+            default: {
                 JOptionPane.showMessageDialog(this, "Seleccione un servidor valido", "Error", 0);
                 break;
             }
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -133,13 +173,15 @@ public class Login extends javax.swing.JFrame {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */

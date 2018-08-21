@@ -154,13 +154,13 @@ public class Envio extends javax.swing.JFrame {
             Sesion s = new Sesion(host, port, user, pass);
             System.out.println(user + pass);
             if (url == null) {
-                if (s.enviarSinAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
+                if (s.enviarSinAdjunto(user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
                     JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
                 }
             }else{
-                if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url, nombrearchivo)) {
+                if (s.enviarConAdjunto(user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url, nombrearchivo)) {
                     JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
                 } else {
                     JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);

@@ -24,6 +24,8 @@ public class Sesion {
     Session session;
     MimeMessage message;
     Transport t;
+    BodyPart text, adjuntar;
+    MimeMultipart multiParte;
     public Sesion(String host, String port, String user, String pass) throws NoSuchProviderException {
         this.host = host;
         this.port = port;
@@ -37,8 +39,10 @@ public class Sesion {
         session = Session.getDefaultInstance(p);
         message = new MimeMessage(session);
         t = session.getTransport("smtp");
+        text = new MimeBodyPart();
+        adjuntar = new MimeBodyPart();
+        multiParte = new MimeMultipart();
     }
-
     public Sesion() {
     }
     
@@ -82,7 +86,7 @@ public class Sesion {
         this.pass = pass;
     }
 
-    public boolean enviarSinAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto) {
+    public boolean enviarSinAdjunto(String correoDe, String correoPara, String asunto, String texto) {
         boolean enviado = false;
         try {
             session.setDebug(true);
@@ -90,7 +94,7 @@ public class Sesion {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(correoPara));
             message.setSubject(asunto);
             message.setText(texto);
-            t.connect(user, pass);
+            t.connect(this.user, this.pass);
             t.sendMessage(message, message.getAllRecipients());
             t.close();
             enviado = true;
@@ -102,24 +106,20 @@ public class Sesion {
         return enviado;
     }
 
-    public boolean enviarConAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto, String adjunto, String nombreArchivo) {
+    public boolean enviarConAdjunto(String correoDe, String correoPara, String asunto, String texto, String adjunto, String nombreArchivo) {
         boolean enviado = false;
         try {
             session.setDebug(true);          
             message.setFrom(new InternetAddress(correoDe));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(correoPara));
             message.setSubject(asunto);
-            BodyPart text = new MimeBodyPart();
-            text.setText(texto);
-            BodyPart adjuntar = new MimeBodyPart();
+            text.setText(texto);        
             adjuntar.setDataHandler(new DataHandler(new FileDataSource(adjunto)));
             adjuntar.setFileName(nombreArchivo);
-            MimeMultipart multiParte = new MimeMultipart();
             multiParte.addBodyPart(text);
             multiParte.addBodyPart(adjuntar);
             message.setContent(multiParte);
-            Transport t = session.getTransport("smtp");
-            t.connect(user, pass);
+            t.connect(this.user, this.pass);
             t.sendMessage(message, message.getAllRecipients());
             t.close();
             enviado = true;
@@ -129,5 +129,17 @@ public class Sesion {
             Logger.getLogger(Sesion.class.getName()).log(Level.SEVERE, null, ex);
         }
         return enviado;
+    }
+    
+    public boolean validarInfo(){
+        boolean valido;
+        try {
+            session.setDebug(true);
+            t.connect(this.user, this.pass);
+            valido = true;
+        } catch (MessagingException ex) {
+            valido = false;
+        }
+        return valido;
     }
 }
