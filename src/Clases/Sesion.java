@@ -142,4 +142,8 @@ public class Sesion {
         }
         return valido;
     }
+    
+    public void noseque(){
+        
+    }
 }
