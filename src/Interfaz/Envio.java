@@ -7,7 +7,6 @@ package Interfaz;
 
 import Clases.Sesion;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.NoSuchProviderException;
