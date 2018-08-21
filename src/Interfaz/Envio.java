@@ -8,6 +8,9 @@ package Interfaz;
 import Clases.Sesion;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.NoSuchProviderException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -20,16 +23,18 @@ public class Envio extends javax.swing.JFrame {
     /**
      * Creates new form Envio
      */
-    private String user, pass, url, nombrearchivo;
+    private String user, pass, url, nombrearchivo, host, port;
 
     public Envio() {
         initComponents();
 
     }
 
-    public Envio(String user, String pass) {
+    public Envio(String user, String pass, String host, String port) {
         this.user = user;
         this.pass = pass;
+        this.host = host;
+        this.port = port;
         initComponents();
     }
 
@@ -130,20 +135,24 @@ public class Envio extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Sesion s = new Sesion();
-        System.out.println(user + pass);
-        if (url == null) {
-            if (s.enviarSinAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
-                JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+        try {
+            Sesion s = new Sesion(host, port, user, pass);
+            System.out.println(user + pass);
+            if (url == null) {
+                if (s.enviarSinAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
+                    JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+                }
+            }else{
+                if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url, nombrearchivo)) {
+                    JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+                }
             }
-        }else{
-            if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url, nombrearchivo)) {
-                JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
-            }
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(Envio.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

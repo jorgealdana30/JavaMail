@@ -8,6 +8,7 @@ import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -18,23 +19,77 @@ import javax.mail.internet.MimeMultipart;
 
 public class Sesion {
 
+    Properties p = new Properties();
+    private String host, port, user, pass;
+    Session session;
+    MimeMessage message;
+    Transport t;
+    public Sesion(String host, String port, String user, String pass) throws NoSuchProviderException {
+        this.host = host;
+        this.port = port;
+        this.user = user;
+        this.pass = pass;
+        p.setProperty("mail.smtp.host", host);
+        p.setProperty("mail.smtp.starttls.enable", "true");
+        p.setProperty("mail.smtp.port", port);
+        p.setProperty("mail.smtp.user", user);
+        p.setProperty("mail.smtp.auth", "false");
+        session = Session.getDefaultInstance(p);
+        message = new MimeMessage(session);
+        t = session.getTransport("smtp");
+    }
+
+    public Sesion() {
+    }
+    
+    public Properties getP() {
+        return p;
+    }
+
+    public void setP(Properties p) {
+        this.p = p;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
     public boolean enviarSinAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto) {
         boolean enviado = false;
         try {
-            Properties p = new Properties();
-            p.setProperty("mail.smtp.host", "smtp.gmail.com");
-            p.setProperty("mail.smtp.starttls.enable", "true");
-            p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", user);
-            p.setProperty("mail.smtp.auth", "false");
-            Session session = Session.getDefaultInstance(p);
             session.setDebug(true);
-            MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(correoDe));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(correoPara));
             message.setSubject(asunto);
             message.setText(texto);
-            Transport t = session.getTransport("smtp");
             t.connect(user, pass);
             t.sendMessage(message, message.getAllRecipients());
             t.close();
@@ -50,15 +105,7 @@ public class Sesion {
     public boolean enviarConAdjunto(String user, String pass, String correoDe, String correoPara, String asunto, String texto, String adjunto, String nombreArchivo) {
         boolean enviado = false;
         try {
-            Properties p = new Properties();
-            p.setProperty("mail.smtp.host", "smtp.gmail.com");
-            p.setProperty("mail.smtp.starttls.enable", "true");
-            p.setProperty("mail.smtp.port", "587");
-            p.setProperty("mail.smtp.user", user);
-            p.setProperty("mail.smtp.auth", "false");
-            Session session = Session.getDefaultInstance(p);
-            session.setDebug(true);
-            MimeMessage message = new MimeMessage(session);
+            session.setDebug(true);          
             message.setFrom(new InternetAddress(correoDe));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(correoPara));
             message.setSubject(asunto);
