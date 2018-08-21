@@ -7,10 +7,9 @@ package Interfaz;
 
 import Clases.Sesion;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
-
 
 /**
  *
@@ -21,18 +20,19 @@ public class Envio extends javax.swing.JFrame {
     /**
      * Creates new form Envio
      */
-    private String user, pass;
-    
+    private String user, pass, url;
+
     public Envio() {
         initComponents();
-        
+
     }
 
     public Envio(String user, String pass) {
         this.user = user;
         this.pass = pass;
         initComponents();
-    }   
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,27 +120,29 @@ public class Envio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int returnVal = adjunto.showOpenDialog(this);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-        File file = adjunto.getSelectedFile();
-        try {
-          // What to do with the file, e.g. display it in a TextArea
-          textarea.read( new FileReader( file.getAbsolutePath() ), null );
-          
-        } catch (IOException ex) {
-          System.out.println("problem accessing file"+file.getAbsolutePath());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = adjunto.getSelectedFile();
+            url = file.getAbsolutePath();
+        } else {
+            System.out.println("File access cancelled by user.");
         }
-    } else {
-        System.out.println("File access cancelled by user.");
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Sesion s = new Sesion();
         System.out.println(user + pass);
-        if (s.enviar(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
-            JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
+        if (url.isEmpty()) {
+            if (s.enviarSinAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
+                JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+            }
         }else{
-            JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+            if (s.enviarConAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText(),url)) {
+                JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo enviar mensaje", "Error", 0);
+            }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
