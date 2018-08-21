@@ -124,14 +124,14 @@ public class Envio extends javax.swing.JFrame {
             File file = adjunto.getSelectedFile();
             url = file.getAbsolutePath();
         } else {
-            System.out.println("File access cancelled by user.");
+            System.out.println("Acceso al archivo cancelado por el usuario.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Sesion s = new Sesion();
         System.out.println(user + pass);
-        if (url.isEmpty()) {
+        if (url == null) {
             if (s.enviarSinAdjunto(user, pass, user, para.getText().trim(), asunto.getText().trim(), texto.getText())) {
                 JOptionPane.showMessageDialog(this, "Mensaje enviado correctamente", "Exito", 1);
             } else {
