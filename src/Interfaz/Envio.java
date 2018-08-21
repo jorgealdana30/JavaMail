@@ -6,6 +6,8 @@
 package Interfaz;
 
 import Clases.Sesion;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 
@@ -40,6 +42,7 @@ public class Envio extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        adjunto = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         para = new javax.swing.JTextField();
@@ -51,6 +54,8 @@ public class Envio extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+
+        adjunto.setDialogTitle("Escoger archivo");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,8 +119,19 @@ public class Envio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Adjuntar a = new Adjuntar();
-        a.setVisible(true);
+        int returnVal = adjunto.showOpenDialog(this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+        File file = adjunto.getSelectedFile();
+        try {
+          // What to do with the file, e.g. display it in a TextArea
+          textarea.read( new FileReader( file.getAbsolutePath() ), null );
+          
+        } catch (IOException ex) {
+          System.out.println("problem accessing file"+file.getAbsolutePath());
+        }
+    } else {
+        System.out.println("File access cancelled by user.");
+    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -164,6 +180,7 @@ public class Envio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser adjunto;
     private javax.swing.JTextField asunto;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

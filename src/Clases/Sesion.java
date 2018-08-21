@@ -3,12 +3,14 @@ package Clases;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
 public class Sesion {
@@ -27,11 +29,11 @@ public class Sesion {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(correoDe));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(correoPara));
-            message.setSubject(asunto);
-            message.setText(texto);
+            BodyPart text = new MimeBodyPart();
+            text.setText("Texto del mensaje");
             Transport t = session.getTransport("smtp");
-            t.connect(user,pass);
-            t.sendMessage(message,message.getAllRecipients());
+            t.connect(user, pass);
+            t.sendMessage(message, message.getAllRecipients());
             t.close();
             enviado = true;
         } catch (AddressException ex) {
